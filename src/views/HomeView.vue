@@ -1,8 +1,17 @@
 <template>
-  <div>
+  <v-app>
+    <v-alert
+      dense
+      text
+      type="success"
+      class="mt-3"
+      v-if="message"
+    >
+      {{ message }}
+    </v-alert>
     <CardList />
     <CreateCard />
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -14,6 +23,18 @@ export default {
   components: {
     CardList,
     CreateCard
+  },
+  data() {
+    return {
+      message: '',
+    }
+  },
+  mounted() {
+    const message = sessionStorage.getItem('message');
+    if(message) {
+      this.message = message;
+      sessionStorage.removeItem('message');
+    }
   }
 }
 </script>
