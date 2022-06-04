@@ -1,15 +1,32 @@
 <template>
   <v-app>
-    <v-header>
+    <v-app-bar
+      app
+      color="white"
+      flat
+    >
+      <v-container class="py-0 fill-height">
+        <v-avatar
+          class="mr-10"
+          color="grey darken-1"
+          size="32"
+        ></v-avatar>
 
-    </v-header>
+        <v-btn
+          text
+          to="/"
+        >
+          ホーム
+        </v-btn>
+      </v-container>
+    </v-app-bar>
 
     <v-main>
       <v-container>
         <router-view/>
       </v-container>
     </v-main>
-    
+
   </v-app>
 </template>
 
@@ -35,3 +52,16 @@ nav {
   }
 }
 </style>
+
+<script>
+  export default {
+    data () {
+      return {
+        links: [
+          'ホーム',
+          'カレンダー'
+        ],
+      }
+    },
+  }
+</script>
