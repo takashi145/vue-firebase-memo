@@ -137,17 +137,10 @@ import firebase from '@/firebase/firebase'
         this.dataReset()
       },
 
-      // async dateChange() {
-      //   const cardRef = firebase.firestore().collection("cards")
-      //   const snapshot = await cardRef.get();
-      //   this.items = [];
-      //   snapshot.forEach(doc => {
-      //     this.items.push(doc.data())
-      //   })
-      // },
-
       async dataReset() {
-        const cardRef = firebase.firestore().collection("cards");
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        const uid = user["uid"];
+        const cardRef = firebase.firestore().collection("cards").where("user_id", "==", uid);
         const snapshot = await cardRef.get();
         this.items = []
         snapshot.forEach(doc => {

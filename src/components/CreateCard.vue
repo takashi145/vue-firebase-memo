@@ -74,12 +74,13 @@ import firebase from '@/firebase/firebase'
     },
     methods: {
       add() {
+        const user = JSON.parse(sessionStorage.getItem('user'));
         firebase.firestore().collection('cards').add(
           {
             // date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
             title: this.title,
             body: this.body,
-            user_id: 1,
+            user_id: user['uid'],
           }
         )
         .then(result => {
@@ -88,8 +89,9 @@ import firebase from '@/firebase/firebase'
         .catch(error => {
           console.log("fail", error);
         })
-        this.$router.push('/cards');
+        
       }
     }
+
   }
 </script>
