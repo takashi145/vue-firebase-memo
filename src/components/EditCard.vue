@@ -6,20 +6,18 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-          color="blue lighten-2"
+          color="primary"
           dark
           v-bind="attrs"
           v-on="on"
-          fixed
-          right
         >
-          +
+          編集
         </v-btn>
       </template>
 
       <v-card>
         <v-card-title class="text-h5 grey lighten-2">
-          新しいメモ
+          メモを更新
         </v-card-title>
 
         <v-divider></v-divider>
@@ -29,7 +27,7 @@
             cols="12"
           >
             <v-text-field
-              :value="title"
+              v-model="title"
               label="タイトル"
               required
               class="mx-2"
@@ -54,9 +52,9 @@
           <v-btn
             color="primary"
             class="mr-4"
-            @click="add"
+            @click="update"
           >
-            追加
+            更新
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -67,23 +65,33 @@
 <script>
 import firebase from '@/firebase/firebase'
   export default {
+    props: {
+      edit_title: {
+        type: String,
+      },
+      edit_body: {
+        type: String,
+      },
+      edit_id: {
+        type: Number,
+      }
+    },
     data () {
       return {
-        title: '',
-        body: '',
+        title: this.edit_title,
+        body: this.edit_body,
+        id: this.edit_id,
         dialog: false,
       }
     },
     methods: {
-      add() {
+      update() {
         this.dialog = false;
-        const user = JSON.parse(sessionStorage.getItem('user'));
-        firebase.firestore().collection('cards').add(
+        firebase.firestore().collection('cards').doc(this.id).update(
           {
             // date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
             title: this.title,
             body: this.body,
-            user_id: user['uid'],
           }
         )
         .then(() => {

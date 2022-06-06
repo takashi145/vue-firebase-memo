@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <div class="mb-8">
+    <div class="mb-4">
       <v-row>
         <v-col
           cols="3"
@@ -86,19 +86,24 @@
                 <v-divider></v-divider>
                 <v-list-item>
                   <v-list-item-content>
-                      <v-form class="mt-4">
+                      <divs class="mt-4">
                         <v-textarea
-                          name="input-7-1"
                           label="メモ"
                           :value="item.body"
-                          hint="100文字以内"
+                          readonly
                         >
                         </v-textarea>
-                      </v-form>
+                      </divs>
                   </v-list-item-content>
                 </v-list-item>
                 <v-divider></v-divider>
                 <v-card-actions>
+                  <EditCard 
+                    :edit_title="item.title" 
+                    :edit_body="item.body" 
+                    :edit_id="item.id"
+                    @refresh="dataReset"
+                  />
                   <v-spacer></v-spacer>
                   <v-btn
                     color="error"
@@ -112,6 +117,7 @@
             
           </v-col>
         </v-row>
+        <CreateCard @refresh="dataReset" />
       </template>
     </v-data-iterator>
 
@@ -120,23 +126,29 @@
 
 <script>
 import firebase from '@/firebase/firebase'
+import CreateCard from '@/components/CreateCard.vue';
+import EditCard from '@/components/EditCard.vue';
   
   export default {
+    components: {
+      CreateCard,
+      EditCard,
+    },
     data: () => ({
       menu: false,
       items: [],
-      deleteId: '',
     }),
     async created() {
         this.dataReset()
     },
     methods: {
+      edit_card() {
+        
+      },
       delete_card(id) {
-        console.log(this.items);
         firebase.firestore().collection('cards').doc(id).delete();
         this.dataReset()
       },
-
       async dataReset() {
         const user = JSON.parse(sessionStorage.getItem("user"));
         const uid = user["uid"];
