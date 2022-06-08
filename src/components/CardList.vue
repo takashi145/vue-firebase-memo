@@ -3,71 +3,23 @@
     <div class="mb-4">
       <v-row>
         <v-col
-          cols="3"
+          cols="12"
+          class="text-h5"
         >
+          メモ数: {{ items.length }}
         </v-col>
+      </v-row>
+      <v-row>
         <v-col
-          cols="6"
+          cols="12"
         >
-          <v-menu
-          ref="menu"
-          v-model="menu"
-          :close-on-content-click="false"
-          :return-value.sync="date"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <!-- <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="date"
-              label="Picker in menu"
-              prepend-icon="mdi-calendar"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-            </template>
-            <v-date-picker
-              v-model="date"
-              no-title
-              scrollable
-              @change="dateChange"
-            >
-              <v-spacer></v-spacer>
-              <v-btn
-                text
-                color="primary"
-                @click="menu = false"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
-                text
-                color="primary"
-                @click="$refs.menu.save(date)"
-              >
-                OK
-              </v-btn>
-            </v-date-picker> -->
-          </v-menu>
-        </v-col>
-        <v-col
-          cols="3"
-        >
+          <CreateCard @refresh="dataReset" />
         </v-col>
       </v-row>
     </div>
-    <v-data-iterator
-      :items="items"
-      :items-per-page.sync="itemsPerPage"
-      hide-default-footer
-    >
-      
-      <template v-slot:default="props">
         <v-row>
           <v-col
-            v-for="item in props.items"
+            v-for="item in items"
             :key="item.id"
             cols="12"
             sm="6"
@@ -105,22 +57,14 @@
                     @refresh="dataReset"
                   />
                   <v-spacer></v-spacer>
-                  <v-btn
-                    color="error"
-                    class="mr-4"
-                    @click="delete_card(item.id)"
-                  >
-                    削除
-                  </v-btn>
+                  <DeleteCard
+                    :delete_id="item.id"
+                    @refresh="dataReset"
+                  />
                 </v-card-actions>
             </v-card>
-            
           </v-col>
         </v-row>
-        <CreateCard @refresh="dataReset" />
-      </template>
-    </v-data-iterator>
-
   </v-container>
 </template>
 
@@ -128,27 +72,22 @@
 import firebase from '@/firebase/firebase'
 import CreateCard from '@/components/CreateCard.vue';
 import EditCard from '@/components/EditCard.vue';
+import DeleteCard from '@/components/DeleteCard.vue';
   
   export default {
+    name: 'CardList',
     components: {
       CreateCard,
       EditCard,
+      DeleteCard,
     },
     data: () => ({
-      menu: false,
       items: [],
     }),
     async created() {
         this.dataReset()
     },
     methods: {
-      edit_card() {
-        
-      },
-      delete_card(id) {
-        firebase.firestore().collection('cards').doc(id).delete();
-        this.dataReset()
-      },
       async dataReset() {
         const user = JSON.parse(sessionStorage.getItem("user"));
         const uid = user["uid"];
