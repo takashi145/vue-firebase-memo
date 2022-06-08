@@ -76,7 +76,6 @@
 <script>
 import firebase from '@/firebase/firebase'
   export default {
-    name: 'EditCard',
     props: {
       edit_title: {
         type: String,

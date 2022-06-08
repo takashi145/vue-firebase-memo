@@ -53,7 +53,6 @@
 <script>
 import firebase from '@/firebase/firebase'
   export default {
-    name: 'DeleteCard',
     props: {
       delete_id: {
         type: String,
