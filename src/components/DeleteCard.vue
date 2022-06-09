@@ -51,30 +51,16 @@
 </template>
 
 <script>
-import firebase from '@/firebase/firebase'
   export default {
-    props: {
-      delete_id: {
-        type: String,
-      }
-    },
     data () {
       return {
-        id: this.delete_id,
         dialog: false,
       }
     },
     methods: {
       destroy() {
         this.dialog = false;
-        firebase.firestore().collection('cards').doc(this.id).delete()
-        .then(() => {
-          this.$emit("refresh");
-        })
-        .catch(error => {
-          console.log("fail", error);
-        })
-        
+        this.$emit("delete");
       }
     }
 

@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <header-component />
     <v-alert
       dense
       text
@@ -9,7 +10,6 @@
     >
       {{ message }}
     </v-alert>
-
     <v-container fluid>
       <div class="mb-4">
         <v-row>
@@ -24,7 +24,7 @@
           <v-col
             cols="12"
           >
-            <create-card @refresh="dataReset" />
+            <create-card @add="add" />
           </v-col>
         </v-row>
       </div>
@@ -33,9 +33,9 @@
               v-for="item in items"
               :key="item.id"
               cols="12"
-              sm="6"
-              md="4"
-              lg="3"
+              sm="12"
+              md="6"
+              lg="4"
             >
               <v-card
                 class="pa-2"
@@ -63,14 +63,12 @@
                   <v-card-actions>
                     <edit-card
                       :edit_title="item.title" 
-                      :edit_body="item.body" 
-                      :edit_id="item.id"
-                      @refresh="dataReset"
+                      :edit_body="item.body"
+                      @update="update($event, item.id)"
                     />
                     <v-spacer></v-spacer>
                     <delete-card
-                      :delete_id="item.id"
-                      @refresh="dataReset"
+                      @delete="destroy(item.id)"
                     />
                   </v-card-actions>
               </v-card>
@@ -85,6 +83,7 @@
   import CreateCard from '@/components/CreateCard.vue';
   import EditCard from '@/components/EditCard.vue';
   import DeleteCard from '@/components/DeleteCard.vue';
+  import HeaderComponent from '@/components/HeaderComponent.vue';
   
   export default {
     name: 'home-view',
@@ -92,6 +91,7 @@
       CreateCard,
       EditCard,
       DeleteCard,
+      HeaderComponent,
     },
     data() {
       return {
@@ -110,6 +110,45 @@
         this.dataReset()
     },
     methods: {
+      add(title, body) {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        firebase.firestore().collection('cards').add(
+          {
+            title: title,
+            body: body,
+            user_id: user['uid'],
+          }
+        )
+        .then(() => {
+          this.dataReset();
+        })
+        .catch(() => {
+        })
+      },
+
+      update(memo, id) {
+        firebase.firestore().collection('cards').doc(id).update(
+          {
+            title: memo.title,
+            body: memo.body,
+          }
+        )
+        .then(() => {
+          this.dataReset();
+        })
+        .catch(() => {
+        })
+      },
+
+      destroy(id) {
+        firebase.firestore().collection('cards').doc(id).delete()
+        .then(() => {
+          this.dataReset();
+        })
+        .catch(() => {
+        })
+      },
+
       async dataReset() {
         const user = JSON.parse(sessionStorage.getItem("user"));
         const uid = user["uid"];

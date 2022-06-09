@@ -68,14 +68,12 @@
             </v-btn>
           </v-card-actions>
         </v-form>
-        
       </v-card>
     </v-dialog>
   </div>
 </template>
 
 <script>
-import firebase from '@/firebase/firebase'
   export default {
     name: 'CreateCard',
     data () {
@@ -97,22 +95,7 @@ import firebase from '@/firebase/firebase'
     methods: {
       add() {
         this.dialog = false;
-        const user = JSON.parse(sessionStorage.getItem('user'));
-        firebase.firestore().collection('cards').add(
-          {
-            title: this.title,
-            body: this.body,
-            user_id: user['uid'],
-          }
-        )
-        .then(() => {
-          this.title = "";
-          this.body = "";
-          this.$emit("refresh");
-        })
-        .catch(error => {
-          console.log("error", error);
-        })
+        this.$emit("add", this.title, this.body);
       }
     }
   }
