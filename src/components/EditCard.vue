@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import firebase from '@/firebase/firebase'
   export default {
     props: {
       edit_title: {
@@ -83,16 +82,12 @@ import firebase from '@/firebase/firebase'
       edit_body: {
         type: String,
       },
-      edit_id: {
-        type: String,
-      }
     },
     data () {
       return {
         valid: false,
         title: this.edit_title,
         body: this.edit_body,
-        id: this.edit_id,
         dialog: false,
         titleRules: [
           v => !!v || '必須項目です。',
@@ -107,21 +102,7 @@ import firebase from '@/firebase/firebase'
     methods: {
       update() {
         this.dialog = false;
-        firebase.firestore().collection('cards').doc(this.id).update(
-          {
-            // date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-            title: this.title,
-            body: this.body,
-          }
-        )
-        .then(() => {
-          this.title = "";
-          this.body = "";
-          this.$emit("refresh");
-        })
-        .catch(error => {
-          console.log("fail", error);
-        })
+        this.$emit("update", {title: this.title, body: this.body});
         
       }
     }

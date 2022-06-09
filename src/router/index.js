@@ -18,7 +18,6 @@ const routes = [
     path: '/login',
     name: 'login',
     component: LoginView,
-    meta: { requiresAuth: false }
   },
   {
     path: '/register',

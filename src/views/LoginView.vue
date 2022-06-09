@@ -10,16 +10,16 @@
     >
       {{ message }}
     </v-alert>
-    <v-form v-model="valid">
-      <v-alert
+    <v-alert
         dense
         outlined
         type="error"
         class="mt-3"
         v-if="error"
-      >
-        ログインに失敗しました。
-      </v-alert>
+    >
+      ログインに失敗しました。
+    </v-alert>
+    <v-form v-model="valid">
       <v-container>
         <v-row>
           <v-col
